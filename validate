@@ -1,4 +1,8 @@
 #!/bin/bash
-# Quick email validation - usage: ./validate user@example.com
+# Quick email validation: ./validate user@example.com
 cd "$(dirname "$0")"
-python3 validator.py "$@"
+if [ -f "venv/bin/python" ]; then
+  exec venv/bin/python validator.py "$@"
+else
+  exec python3 validator.py "$@"
+fi
