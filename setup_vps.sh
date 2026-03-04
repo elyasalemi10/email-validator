@@ -1,37 +1,26 @@
 #!/bin/bash
-# VPS setup script - run on Ubuntu/Debian VPS (DigitalOcean, Linode, etc.)
-# Port 25 is open on VPS - full SMTP validation will work
+# VPS setup - run: curl -sSL https://raw.githubusercontent.com/elyasalemi10/email-validator/main/setup_vps.sh | bash
 
 set -e
 echo "=== Email Validator VPS Setup ==="
 
-# Update system
 sudo apt-get update -qq
 sudo apt-get install -y -qq python3 python3-pip python3-venv git
 
-# Clone repo (or pull if exists)
-if [ -d "email-validator" ]; then
-  cd email-validator && git pull
+INSTALL_DIR="${HOME}/email-validator"
+if [ -d "$INSTALL_DIR" ]; then
+  cd "$INSTALL_DIR" && git pull
 else
-  git clone https://github.com/elyasalemi10/email-validator.git
-  cd email-validator
+  git clone https://github.com/elyasalemi10/email-validator.git "$INSTALL_DIR"
+  cd "$INSTALL_DIR"
 fi
 
-# Create venv and install deps
 python3 -m venv venv
 source venv/bin/activate
 pip install -q -r requirements.txt
-
-# Make validate script executable
 chmod +x validate
 
 echo ""
-echo "=== Setup complete ==="
-echo ""
-echo "Quick validate single email:"
-echo "  ./validate user@example.com"
-echo ""
-echo "Validate CSV:"
-echo "  ./validate -f leads.csv -o results.csv"
-echo ""
-echo "Or: source venv/bin/activate && python validator.py email@example.com"
+echo "=== Done! ==="
+echo "cd $INSTALL_DIR"
+echo "./validate user@example.com"
